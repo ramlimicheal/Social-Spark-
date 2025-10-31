@@ -403,7 +403,8 @@ function App() {
     // Derived State & Memos
     // FIX: The logical AND (&&) operator was returning the last string value, not a boolean. Coerce to boolean with `!!`.
     const isBriefComplete = useMemo(() => !!(brief.brandName.trim() && brief.productDetails.trim() && brief.campaignGoal.trim() && brief.coreMessage.trim()), [brief]);
-    const canGenerate = useMemo(() => isBriefComplete && conceptFile && selectedIdea && selectedCopy, [isBriefComplete, conceptFile, selectedIdea, selectedCopy]);
+    // FIX: Same issue - the logical AND operator returns the last value, not a boolean. Coerce to boolean with `!!`.
+    const canGenerate = useMemo(() => !!(isBriefComplete && conceptFile && selectedIdea && selectedCopy), [isBriefComplete, conceptFile, selectedIdea, selectedCopy]);
 
     // Effects
     useEffect(() => {
