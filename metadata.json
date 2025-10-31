@@ -1,0 +1,5 @@
+{
+  "name": "SocialSpark Pro",
+  "description": "An AI-powered creative studio to generate social media campaign assets. Users can input a campaign brief, upload a visual concept, and the AI will generate copy variants, creative ideas, and final visual assets for various social media platforms.",
+  "requestFramePermissions": []
+}
