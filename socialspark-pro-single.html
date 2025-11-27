@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SocialSpark Pro - Black Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Dark Theme Variables */
+    :root {
+      --background: 0 0% 4%;
+      --foreground: 0 0% 98%;
+      --card: 0 0% 6%;
+      --card-foreground: 0 0% 98%;
+      --primary: 142 76% 36%;
+      --primary-foreground: 144 61% 20%;
+      --secondary: 0 0% 10%;
+      --muted: 0 0% 15%;
+      --accent: 142 76% 36%;
+      --destructive: 0 84% 60%;
+      --border: 0 0% 15%;
+      --input: 0 0% 15%;
+      --ring: 142 76% 36%;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    /* Animations */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .animate-slide-in { animation: slideIn 0.3s ease-out; }
+
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #27272a;
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .small-loader {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #27272a;
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Card Styles */
+    .glass-card {
+      background: rgba(15, 15, 15, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #18181b;
+      color: #fafafa;
+      border: 1px solid #27272a;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #27272a;
+      border-color: #3f3f46;
+    }
+
+    /* Input Styles */
+    input[type="text"], textarea, select {
+      background: #18181b;
+      border: 1px solid #27272a;
+      color: #fafafa;
+      border-radius: 8px;
+      padding: 0.75rem;
+      transition: all 0.2s;
+    }
+
+    input[type="color"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+    }
+    input[type="color"]::-webkit-color-swatch {
+        border-radius: 8px;
+        border: 2px solid #27272a;
+    }
+    input[type="color"]::-moz-color-swatch {
+        border-radius: 8px;
+        border: 2px solid #27272a;
+    }
+
+    input[type="text"]:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #71717a;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-green {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+    }
+
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #14b8a6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Concept & Copy Cards */
+    .concept-card, .copy-variant {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .concept-card:hover, .copy-variant:hover {
+      border-color: #22c55e;
+      background: #1c1c1f;
+      transform: translateY(-2px);
+    }
+
+    .concept-card.selected, .copy-variant.selected {
+      border-color: #22c55e;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+    }
+
+    /* Platform Buttons */
+    .platform-btn {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .platform-btn:hover {
+      border-color: #22c55e;
+      background: #1c1c1f;
+    }
+
+    .platform-btn.active {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(22, 163, 74, 0.1) 100%);
+      border-color: #22c55e;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Color Swatch */
+    .color-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid #27272a;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.1);
+      border-color: #22c55e;
+    }
+
+    .color-swatch .delete-btn {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border:none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .color-swatch:hover .delete-btn {
+      opacity: 1;
+    }
+
+    /* Preview Grid */
+    .preview-card {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .preview-card:hover {
+      border-color: #22c55e;
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Tab Styles */
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: none;
+      color: #a1a1aa;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: #18181b;
+      color: #fafafa;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    /* Creative Board Styles */
+    .team-concept {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .role-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .concept-section {
+      border-left: 2px solid #27272a;
+      padding-left: 1rem;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))',
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+            },
+          }
+        }
+      }
+    }
+  </script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.2.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@0.12.0"
+  }
+}
+</script>
+</head>
+<body class="min-h-screen">
+  <div id="root"></div>
+
+  <script type="module">
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import { GoogleGenAI, Type } from "@google/genai";
+
+// Get API key from environment or prompt user
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.API_KEY || prompt("Please enter your Gemini API Key:");
+
+if (!API_KEY) {
+  alert("API_KEY is required to use this app");
+}
+
+const ai = new GoogleGenAI({ apiKey: API_KEY });
+
+// Platform ratios
+const platformRatios = {
+  'instagram': '1:1 (Square)',
+  'facebook': '1.91:1 (Landscape)',
+  'linkedin': '1.91:1 (Landscape)',
+  'twitter': '16:9 (Landscape)',
+  'tiktok': '9:16 (Vertical)',
+  'youtube': '16:9 (Landscape)',
+};
+
+// Creative Team Data
+const CREATIVE_TEAM = [
+  {
+    name: 'Alex',
+    role: 'Creative Director',
+    specialty: 'Big-picture thinking, campaign storytelling, brand building.',
+    approach: 'Starts with the "why," aiming for emotionally resonant ideas that earn attention, not just buy it.',
+    badge: 'bg-red-950 text-red-300',
+  },
+  {
+    name: 'Jasmine',
+    role: 'Art Director',
+    specialty: 'Visual identity, design trends, multi-platform aesthetics.',
+    approach: 'Believes in visual systems, not just one-off images. Focuses on creating a distinct and ownable look and feel.',
+    badge: 'bg-purple-950 text-purple-300',
+  },
+  {
+    name: 'Ben',
+    role: 'Copywriter',
+    specialty: 'Brand voice, storytelling, conversion-focused copy.',
+    approach: 'Words should work hard. Every headline, CTA, and caption has a job to do, all while sounding effortlessly human.',
+    badge: 'bg-blue-950 text-blue-300',
+  },
+  {
+    name: 'Maria',
+    role: 'Strategy Director',
+    specialty: 'Market analysis, consumer insights, performance metrics.',
+    approach: 'Creativity without strategy is just art. Ground every idea in a real consumer insight and a clear business objective.',
+    badge: 'bg-yellow-950 text-yellow-300',
+  },
+  {
+    name: 'Leo',
+    role: 'Designer',
+    specialty: 'UI/UX, design systems, production feasibility.',
+    approach: 'Function and form are partners. An idea is only as good as its execution across every single touchpoint.',
+    badge: 'bg-teal-950 text-teal-300',
+  },
+];
+
+// Gemini Service Functions
+const withRetry = async (fn, retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      console.error(\`Attempt \${i + 1} failed:\`, error);
+      if (i === retries - 1) throw error;
+      await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+    }
+  }
+  throw new Error("Operation failed after multiple retries.");
+};
+
+const autoFillBrief = async (brandName, campaignGoal, productDetails) => {
+  return withRetry(async () => {
+    const prompt = \`You are a marketing strategist. Generate campaign brief elements in JSON format.
+    Brand: "\${brandName}"
+    Product: "\${productDetails}"
+    Goal: "\${campaignGoal}"
+    Return ONLY a JSON object with these keys: "coreMessage", "targetAudience", "brandVoice", "emotionalAppeal".
+    No markdown, no explanations, just raw JSON.\`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [{ parts: [{ text: prompt }] }],
+       config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            coreMessage: { type: Type.STRING },
+            targetAudience: { type: Type.STRING },
+            brandVoice: { type: Type.STRING },
+            emotionalAppeal: { type: Type.STRING },
+          },
+        },
+      },
+    });
+
+    const text = response.text.trim();
+    return JSON.parse(text);
+  });
+};
+
+const analyzeImage = async (file) => {
+    return withRetry(async () => {
+        const base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(",")[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+
+        const prompt = \`Analyze this creative concept. Provide:
+**Layout Structure**: Composition and hierarchy
+**Typography**: Font choices and readability
+**Color Palette**: Dominant colors
+**Visual Style**: Overall aesthetic
+**Mood & Tone**: Emotional impact
+
+Use **bold** for headings.\`;
+
+        const imagePart = {
+            inlineData: {
+                mimeType: file.type,
+                data: base64Data,
+            },
+        };
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{ parts: [{ text: prompt }, imagePart] }]
+        });
+
+        return response.text.trim();
+    });
+};
+
+const generateCopy = async (brief, platform) => {
+    return withRetry(async () => {
+        const prompt = \`Generate 5 high-impact social media copy variants.
+
+        Brand: \${brief.brandName}
+        Product: \${brief.productDetails}
+        Goal: \${brief.campaignGoal}
+        Message: \${brief.coreMessage}
+        Audience: \${brief.targetAudience || 'General'}
+        Voice: \${brief.brandVoice || 'Engaging'}
+        Platform: \${platform}
+
+        Use these 5 angles:
+        1. Feature Spotlight
+        2. Problem-Agitate-Solve
+        3. Social Proof
+        4. Urgency/FOMO
+        5. Aspirational Vision
+
+        Format each as:
+        **Variant [number]: [Angle]**
+        Headline: [hook]
+        Body: [message]
+        CTA: [call-to-action]
+        Why it works: [explanation]\`;
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{ parts: [{ text: prompt }] }]
+        });
+        return response.text.trim();
+    });
+};
+
+const generateConcepts = async (brief, analysisContext) => {
+    return withRetry(async () => {
+        const analysisPrompt = analysisContext ? \`Style Analysis:\\n\${analysisContext}\\n\` : '';
+        const prompt = \`Generate 5 creative campaign concepts.
+
+        Brand: \${brief.brandName}
+        Product: \${brief.productDetails}
+        Goal: \${brief.campaignGoal}
+        Message: \${brief.coreMessage}
+        \${analysisPrompt}
+        Format each as:
+        **Concept [number]: [Headline]**
+        Visual: [description]
+        Angle: [message angle]
+        Unique Factor: [what makes it stand out]\`;
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [{ parts: [{ text: prompt }] }]
+        });
+        return response.text.trim();
+    });
+};
+
+const generateImage = async (prompt) => {
+    return withRetry(async () => {
+        const response = await ai.models.generateImages({
+            model: 'imagen-4.0-generate-001',
+            prompt: prompt,
+            config: {
+                numberOfImages: 1,
+            },
+        });
+        const imageData = response.generatedImages[0].image.imageBytes;
+        if (!imageData) {
+            throw new Error("No image data returned from API");
+        }
+        return \`data:image/png;base64,\${imageData}\`;
+    });
+};
+
+// Initial Brief
+const initialBrief = {
+  brandName: '',
+  productDetails: '',
+  campaignGoal: '',
+  coreMessage: '',
+  targetAudience: '',
+  brandVoice: '',
+  emotionalAppeal: '',
+};
+
+// Components
+const Header = ({ onSave, onLoad, onClear }) => (
+    <header className="text-center mb-8 animate-slide-in">
+        <h1 className="text-5xl md:text-6xl font-black tracking-tight gradient-text mb-3">SocialSpark Pro</h1>
+        <p className="text-zinc-400 text-lg mb-6">AI-Powered Creative Studio • Black Edition V11</p>
+        <div className="flex justify-center gap-3 flex-wrap">
+            <button onClick={onSave} className="btn-secondary px-4 py-2 rounded-lg font-medium text-sm transition-all">💾 Save Profile</button>
+            <button onClick={onLoad} className="btn-secondary px-4 py-2 rounded-lg font-medium text-sm transition-all">📂 Load Profile</button>
+            <button onClick={onClear} className="px-4 py-2 rounded-lg font-medium text-sm transition-all bg-red-950 text-red-400 border border-red-900 hover:bg-red-900">🗑️ Clear All</button>
+        </div>
+    </header>
+);
+
+const BriefForm = ({ brief, setBrief, onAutoFill, isAutoFilling }) => {
+    const handleChange = (e) => {
+        setBrief({ ...brief, [e.target.id]: e.target.value });
+    };
+
+    return (
+        <section className="glass-card p-6 animate-slide-in">
+            <div className="flex items-center gap-3 mb-6"><span className="badge badge-green">Step 1</span><h2 className="text-xl font-bold">Campaign Brief</h2></div>
+            <div className="space-y-4">
+                <div><label className="block text-sm font-medium mb-2 text-zinc-300">Brand Name *</label><input type="text" id="brandName" value={brief.brandName} onChange={handleChange} placeholder="Enter brand name..." className="w-full" /></div>
+                <div><label className="block text-sm font-medium mb-2 text-zinc-300">Product/Service Details *</label><textarea id="productDetails" value={brief.productDetails} onChange={handleChange} rows={3} placeholder="Describe the product or service..." className="w-full resize-none"></textarea></div>
+                <div>
+                    <label className="block text-sm font-medium mb-2 text-zinc-300">Campaign Objective *</label><textarea id="campaignGoal" value={brief.campaignGoal} onChange={handleChange} rows={3} placeholder="What's your goal?" className="w-full resize-none"></textarea>
+                    <button onClick={onAutoFill} disabled={isAutoFilling || !brief.brandName || !brief.campaignGoal} className="mt-2 btn-secondary w-full px-4 py-2 rounded-lg font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        {isAutoFilling && <div className="small-loader"></div>}<span>🤖 Auto-fill Brief Details</span>
+                    </button>
+                </div>
+                <div><label className="block text-sm font-medium mb-2 text-zinc-300">Core Message *</label><textarea id="coreMessage" value={brief.coreMessage} onChange={handleChange} rows={3} placeholder="Main message or value proposition..." className="w-full resize-none"></textarea></div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div><label className="block text-sm font-medium mb-2 text-zinc-300">Target Audience</label><input type="text" id="targetAudience" value={brief.targetAudience} onChange={handleChange} placeholder="e.g., Gen-Z, Professionals" className="w-full" /></div>
+                    <div><label className="block text-sm font-medium mb-2 text-zinc-300">Brand Voice</label><input type="text" id="brandVoice" value={brief.brandVoice} onChange={handleChange} placeholder="e.g., Bold, Playful" className="w-full" /></div>
+                </div>
+                <div><label className="block text-sm font-medium mb-2 text-zinc-300">Emotional Appeal</label><input type="text" id="emotionalAppeal" value={brief.emotionalAppeal} onChange={handleChange} placeholder="e.g., FOMO, Trust, Joy" className="w-full" /></div>
+            </div>
+        </section>
+    );
+};
+
+const VisualsForm = ({ onFileChange, conceptFile, isAnalyzing, onAnalyze, palette, onAddColor, onRemoveColor }) => {
+    const [preview, setPreview] = useState(null);
+    const [color, setColor] = useState('#22c55e');
+
+    useEffect(() => {
+        if (!conceptFile) {
+            setPreview(null);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onloadend = () => setPreview(reader.result);
+        reader.readAsDataURL(conceptFile);
+    }, [conceptFile]);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0];
+        onFileChange(file || null);
+    };
+
+    const handleAddColor = () => onAddColor(color);
+
+    return (
+        <section className="glass-card p-6 animate-slide-in">
+            <div className="flex items-center gap-3 mb-6"><span className="badge badge-green">Step 2</span><h2 className="text-xl font-bold">Visual Reference</h2></div>
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium mb-2 text-zinc-300">Primary Concept Image</label>
+                    <label htmlFor="conceptFileInput" className="cursor-pointer group flex flex-col items-center justify-center w-full h-48 rounded-lg border-2 border-dashed border-zinc-800 hover:border-green-500 transition-all">
+                        {preview ? React.createElement('img', { src: preview, alt: "Preview", className: "max-h-full max-w-full rounded-lg" }) :
+                            React.createElement('div', { className: "text-center" },
+                                React.createElement('svg', { className: "h-12 w-12 mx-auto text-zinc-600 mb-3", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" })),
+                                React.createElement('span', { className: "text-zinc-400 font-medium" }, "Upload Concept Image"),
+                                React.createElement('p', { className: "text-xs text-zinc-600 mt-1" }, "PNG, JPG up to 10MB")
+                            )
+                        }
+                    </label>
+                    <input type="file" id="conceptFileInput" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    {conceptFile && <button onClick={onAnalyze} disabled={isAnalyzing} className="mt-3 btn-primary w-full px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                        {isAnalyzing && <div className="small-loader"></div>}<span>🔍 Analyze Layout & Style</span>
+                    </button>}
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-2 text-zinc-300">Brand Palette</label>
+                    <div className="p-4 rounded-lg border-2 border-dashed border-zinc-800 hover:border-green-500 transition-all">
+                        <div className="flex items-center gap-2 mb-3">
+                            <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-12 h-12 rounded-lg cursor-pointer border-0 bg-transparent p-0" />
+                            <input type="text" value={color} onChange={e => setColor(e.target.value)} className="flex-grow" placeholder="#HEX" />
+                            <button onClick={handleAddColor} className="btn-secondary px-4 py-2 rounded-lg font-medium text-sm">Add</button>
+                        </div>
+                        <div className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-black/30 rounded-lg">
+                            {palette.length === 0 ? React.createElement('p', { className: "text-xs text-zinc-600 self-center" }, "Add brand colors") :
+                                palette.map((c, i) => (
+                                    React.createElement('div', { key: \`\${c}-\${i}\`, className: "color-swatch", style: { backgroundColor: c } },
+                                        React.createElement('button', { onClick: () => onRemoveColor(i), className: "delete-btn" }, "×")
+                                    )
+                                ))
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const AIGeneration = ({
+  onGenerateCopy, isGeneratingCopy, copyVariants, selectedCopy, onSelectCopy,
+  onGenerateIdeas, isGeneratingIdeas, campaignIdeas, selectedIdea, onSelectIdea,
+  isBriefComplete
+}) => (
+    <section className="glass-card p-6 animate-slide-in">
+        <div className="flex items-center gap-3 mb-6"><span className="badge badge-green">Step 3</span><h2 className="text-xl font-bold">AI Generation</h2></div>
+        <div className="space-y-4">
+            <button onClick={onGenerateCopy} disabled={!isBriefComplete || isGeneratingCopy} className="btn-secondary w-full px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                {isGeneratingCopy && React.createElement('div', { className: "small-loader" })}<span>✨ Generate Copy Variants</span>
+            </button>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+                {isGeneratingCopy && React.createElement('div', { className: "flex justify-center p-4" }, React.createElement('div', { className: "small-loader" }))}
+                {copyVariants.map(variant => (
+                    React.createElement('div', { key: variant.index, onClick: () => onSelectCopy(variant), className: \`copy-variant \${selectedCopy?.index === variant.index ? 'selected' : ''}\` },
+                        React.createElement('div', { className: "flex items-start gap-3" },
+                            React.createElement('div', { className: "flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 text-green-400 flex items-center justify-center font-bold text-sm" }, variant.index),
+                            React.createElement('div', { className: "flex-1" },
+                                React.createElement('h3', { className: "font-bold text-sm mb-2 text-green-400" }, variant.angle),
+                                React.createElement('div', { className: "space-y-2 text-xs text-zinc-300" },
+                                    React.createElement('div', null, React.createElement('strong', null, "Headline:"), " ", variant.headline),
+                                    variant.body && React.createElement('div', null, React.createElement('strong', null, "Body:"), " ", variant.body),
+                                    variant.cta && React.createElement('div', null, React.createElement('strong', null, "CTA:"), " ", variant.cta),
+                                    variant.why && React.createElement('div', { className: "text-zinc-500 italic mt-2" }, variant.why)
+                                )
+                            )
+                        )
+                    )
+                ))}
+            </div>
+            <button onClick={onGenerateIdeas} disabled={!isBriefComplete || isGeneratingIdeas} className="btn-secondary w-full px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                {isGeneratingIdeas && React.createElement('div', { className: "small-loader" })}<span>💡 Generate Creative Concepts</span>
+            </button>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+                {isGeneratingIdeas && React.createElement('div', { className: "flex justify-center p-4" }, React.createElement('div', { className: "small-loader" }))}
+                {campaignIdeas.map(idea => (
+                    React.createElement('div', { key: idea.index, onClick: () => onSelectIdea(idea), className: \`concept-card \${selectedIdea?.index === idea.index ? 'selected' : ''}\` },
+                         React.createElement('div', { className: "flex items-start gap-3" },
+                            React.createElement('div', { className: "flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 text-green-400 flex items-center justify-center font-bold text-sm" }, idea.index),
+                            React.createElement('div', { className: "flex-1" },
+                                React.createElement('h3', { className: "font-bold text-sm mb-2" }, idea.headline),
+                                React.createElement('p', { className: "text-xs text-zinc-400 whitespace-pre-line" }, idea.fullDescription)
+                            )
+                        )
+                    )
+                ))}
+            </div>
+        </div>
+    </section>
+);
+
+const PlatformSettings = ({ selectedPlatform, onPlatformChange, quality, onQualityChange, stylePreset, onStyleChange }) => {
+    const platforms = Object.keys(platformRatios);
+    return (
+        <section className="glass-card p-6 animate-slide-in">
+            <div className="flex items-center gap-3 mb-6"><span className="badge badge-green">Step 4</span><h2 className="text-xl font-bold">Platform & Format</h2></div>
+            <div className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium mb-3 text-zinc-300">Platform</label>
+                    <div className="grid grid-cols-3 gap-2">
+                        {platforms.map(p => (
+                            React.createElement('button', { key: p, onClick: () => onPlatformChange(p), className: \`platform-btn \${selectedPlatform === p ? 'active' : ''}\` },
+                                React.createElement('div', { className: "font-semibold text-sm capitalize" }, p.replace('-', ' ')),
+                                React.createElement('div', { className: "text-xs text-zinc-500" }, platformRatios[p])
+                            )
+                        ))}
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-2 text-zinc-300">Quality</label>
+                        <select id="resolution" value={quality} onChange={e => onQualityChange(e.target.value)} className="w-full">
+                            <option value="standard">Standard</option><option value="hd">HD</option><option value="4k">Ultra HD</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-2 text-zinc-300">Style</label>
+                        <select id="stylePreset" value={stylePreset} onChange={e => onStyleChange(e.target.value)} className="w-full">
+                            <option value="match">Match Concept</option><option value="minimalist">Minimalist</option><option value="bold">Bold</option><option value="elegant">Elegant</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const GenerationQueue = ({ queue }) => {
+    const statusStyles = {
+        pending: 'bg-zinc-800 text-zinc-400',
+        generating: 'bg-blue-950 text-blue-400 animate-pulse',
+        done: 'bg-green-950 text-green-400',
+        failed: 'bg-red-950 text-red-400',
+    };
+    return (
+        <aside className="glass-card p-6 sticky top-6 animate-slide-in">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><span>⚡</span> Generation Queue</h2>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+                {queue.length === 0 ? React.createElement('p', { className: "text-zinc-500 text-sm" }, "Your jobs will appear here") :
+                    [...queue].slice(-5).reverse().map(item => (
+                        React.createElement('div', { key: item.id, className: \`flex justify-between items-center p-3 rounded-lg \${item.status === 'done' ? 'bg-green-950/20' : item.status === 'failed' ? 'bg-red-950/20' : 'bg-zinc-900/50'}\` },
+                            React.createElement('div', { className: "flex-1 min-w-0" },
+                                React.createElement('span', { className: "font-medium text-sm capitalize" }, item.platform.replace('-', ' ')),
+                                React.createElement('span', { className: "text-xs text-zinc-500 block truncate" }, item.concept)
+                            ),
+                            React.createElement('span', { className: \`text-xs py-1 px-2 rounded-full ml-2 \${statusStyles[item.status]}\` }, item.status)
+                        )
+                    ))}
+            </div>
+        </aside>
+    );
+};
+
+const CreativeCard = ({ creative, status, onDownload, onRevise, onRetry, error }) => {
+    const { jobId, url, platform, label, concept } = creative;
+
+    if (status === 'generating' || status === 'pending') {
+        return React.createElement('div', { className: "preview-card p-4 animate-slide-in", id: \`card-\${jobId}\` },
+            React.createElement('div', { className: "w-full aspect-square bg-zinc-900 rounded-lg flex items-center justify-center mb-3" }, React.createElement('div', { className: "loader" })),
+            React.createElement('div', null,
+                React.createElement('div', { className: "font-semibold text-sm capitalize" }, platform.replace('-', ' '), " ", React.createElement('span', { className: "text-zinc-400" }, "(", label, ")")),
+                React.createElement('div', { className: "text-xs text-zinc-500" }, "Generating...")
+            )
+        );
+    }
+    if (status === 'failed') {
+         return React.createElement('div', { className: "preview-card p-4 animate-slide-in", id: \`card-\${jobId}\` },
+            React.createElement('div', { className: "w-full aspect-square bg-red-950/20 border border-red-900/30 rounded-lg flex flex-col items-center justify-center p-4" },
+                React.createElement('p', { className: "text-sm font-semibold text-red-400" }, "Generation Failed"),
+                error && React.createElement('p', { className: "text-xs text-zinc-500 mt-1 text-center" }, error),
+                React.createElement('button', { onClick: () => onRetry(jobId), className: "mt-3 btn-secondary px-3 py-2 rounded-lg text-xs" }, "Try Again")
+            )
+        );
+    }
+    return React.createElement('div', { className: "preview-card p-4 animate-slide-in", id: \`card-\${jobId}\` },
+        React.createElement('div', { className: "w-full aspect-square bg-zinc-900 rounded-lg overflow-hidden mb-3" }, React.createElement('img', { src: url, className: "w-full h-full object-contain", alt: "Creative" })),
+        React.createElement('div', { className: "mb-3" },
+            React.createElement('div', { className: "font-semibold text-sm capitalize" }, platform.replace('-', ' '), " ", React.createElement('span', { className: "text-zinc-400" }, "(", label, ")")),
+            React.createElement('div', { className: "text-xs text-zinc-500" }, concept)
+        ),
+        React.createElement('div', { className: "flex gap-2" },
+            React.createElement('button', { onClick: () => onDownload(url, jobId), className: "flex-1 btn-primary px-3 py-2 rounded-lg text-xs font-medium" }, "Download"),
+            React.createElement('button', { onClick: () => onRevise(jobId), className: "btn-secondary px-3 py-2 rounded-lg text-xs font-medium" }, "✏️ Revise")
+        )
+    );
+};
+
+const ResultsGrid = ({ creatives, queue, onDownload, onRevise, onRetry, onDownloadAll }) => {
+
+    const displayItems = useMemo(() => {
+        const items = new Map();
+        queue.forEach(q => {
+            if (creatives.has(q.id)) {
+                 items.set(q.id, { creative: creatives.get(q.id), status: q.status, error: q.error });
+            } else if (q.status !== 'done') {
+                const placeholderCreative = {
+                    jobId: q.id,
+                    url: '',
+                    platform: q.platform,
+                    label: q.concept.includes('With Text') ? 'With Text' : 'No Text',
+                    concept: q.concept,
+                    copy: null,
+                    brand: '',
+                    prompt: '',
+                };
+                items.set(q.id, { creative: placeholderCreative, status: q.status, error: q.error });
+            }
+        });
+
+        return Array.from(items.values());
+    }, [creatives, queue]);
+
+    return (
+        <section className="glass-card p-6 min-h-[600px] animate-slide-in">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold flex items-center gap-2"><span>🖼️</span> Generated Creatives</h2>
+                {creatives.size > 0 && React.createElement('button', { onClick: onDownloadAll, className: "btn-primary px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2" },
+                    React.createElement('svg', { className: "h-4 w-4", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" })),
+                    "Download All"
+                )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {displayItems.length === 0 ? React.createElement('p', { className: "text-zinc-500 text-sm col-span-full text-center py-20" }, "Your creatives will appear here") :
+                    displayItems.map(({ creative, status, error }) => React.createElement(CreativeCard, { key: creative.jobId, creative: creative, status: status, error: error, onDownload: onDownload, onRevise: onRevise, onRetry: onRetry }))}
+            </div>
+        </section>
+    );
+};
+
+const Toast = ({ message, show }) => {
+    if (!show) return null;
+    return React.createElement('div', { className: "fixed top-5 right-5 bg-[#18181b] border border-[#27272a] rounded-lg py-4 px-6 shadow-lg z-[9999] animate-slide-in" },
+        React.createElement('p', { className: "text-sm font-medium" }, message)
+    );
+};
+
+const Modal = ({ children, active }) => {
+    if (!active) return null;
+    return React.createElement('div', { className: "fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm flex items-center justify-center animation-fade-in" }, children);
+};
+
+// Creative Board Component (simplified version)
+const CreativeBoard = ({ showToast }) => {
+    return React.createElement('div', { className: "glass-card p-6 animate-slide-in" },
+        React.createElement('h2', { className: "text-2xl font-bold mb-4" }, "Creative Board - Coming Soon"),
+        React.createElement('p', { className: "text-zinc-400" }, "Collaborate with AI creative team members to develop comprehensive campaign concepts.")
+    );
+};
+
+// Main App Component
+function App() {
+    const [brief, setBrief] = useState(initialBrief);
+    const [isAutoFilling, setIsAutoFilling] = useState(false);
+
+    const [conceptFile, setConceptFile] = useState(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [analysisResult, setAnalysisResult] = useState(null);
+
+    const [palette, setPalette] = useState([]);
+
+    const [isGeneratingCopy, setIsGeneratingCopy] = useState(false);
+    const [copyVariants, setCopyVariants] = useState([]);
+    const [selectedCopy, setSelectedCopy] = useState(null);
+
+    const [isGeneratingIdeas, setIsGeneratingIdeas] = useState(false);
+    const [campaignIdeas, setCampaignIdeas] = useState([]);
+    const [selectedIdea, setSelectedIdea] = useState(null);
+
+    const [platform, setPlatform] = useState('instagram');
+    const [quality, setQuality] = useState('hd');
+    const [stylePreset, setStylePreset] = useState('match');
+
+    const [queue, setQueue] = useState([]);
+    const [creatives, setCreatives] = useState(new Map());
+
+    const [toast, setToast] = useState({ show: false, message: '' });
+
+    const [modals, setModals] = useState({ revision: false, loadProfile: false, confirmClear: false });
+    const [currentRevisionId, setCurrentRevisionId] = useState(null);
+    const [revisionFeedback, setRevisionFeedback] = useState('');
+    const [profiles, setProfiles] = useState({});
+
+    const [activeTab, setActiveTab] = useState('campaign');
+
+    // FIX: The logical AND (&&) operator was returning the last string value, not a boolean. Coerce to boolean with \`!!\`.
+    const isBriefComplete = useMemo(() => !!(brief.brandName.trim() && brief.productDetails.trim() && brief.campaignGoal.trim() && brief.coreMessage.trim()), [brief]);
+    // FIX: Same issue - the logical AND operator returns the last value, not a boolean. Coerce to boolean with \`!!\`.
+    const canGenerate = useMemo(() => !!(isBriefComplete && conceptFile && selectedIdea && selectedCopy), [isBriefComplete, conceptFile, selectedIdea, selectedCopy]);
+
+    useEffect(() => {
+        try {
+            const savedProfiles = JSON.parse(localStorage.getItem('clientProfiles') || '{}');
+            setProfiles(savedProfiles);
+        } catch {
+            setProfiles({});
+        }
+        showToast('🚀 Welcome to SocialSpark Pro - Black Edition', 4000);
+    }, []);
+
+    const showToast = (message, duration = 3000) => {
+        setToast({ show: true, message });
+        setTimeout(() => setToast({ show: false, message: '' }), duration);
+    };
+
+    const handleAutoFill = useCallback(async () => {
+        if (!brief.brandName || !brief.campaignGoal) {
+            return showToast('Fill in Brand Name and Campaign Objective first');
+        }
+        setIsAutoFilling(true);
+        try {
+            const result = await autoFillBrief(brief.brandName, brief.campaignGoal, brief.productDetails);
+            setBrief(b => ({ ...b, ...result }));
+            showToast('✅ Brief auto-generated!');
+        } catch (e) {
+            console.error(e);
+            showToast('❌ Failed to generate brief');
+        } finally {
+            setIsAutoFilling(false);
+        }
+    }, [brief]);
+
+    const handleAnalyze = useCallback(async () => {
+        if (!conceptFile) return;
+        setIsAnalyzing(true);
+        setAnalysisResult('');
+        try {
+            const result = await analyzeImage(conceptFile);
+            setAnalysisResult(result);
+            showToast('✅ Analysis complete!');
+        } catch (e) {
+            console.error(e);
+            setAnalysisResult('Analysis failed');
+            showToast('❌ Analysis failed');
+        } finally {
+            setIsAnalyzing(false);
+        }
+    }, [conceptFile]);
+
+    const handleAddColor = (color) => {
+        if (palette.length < 10) {
+            setPalette(p => [...p, color]);
+        } else {
+            showToast('❌ Max 10 colors');
+        }
+    };
+    const handleRemoveColor = (index) => setPalette(p => p.filter((_, i) => i !== index));
+
+    const parseAndSetCopyVariants = (text) => {
+        const variantBlocks = text.split(/\*\*Variant \d+:/).filter(b => b.trim());
+        const variants = variantBlocks.map((variant, index) => {
+            const lines = variant.trim().split('\\n').filter(l => l.trim());
+            const angle = lines[0] ? lines[0].replace(/\*\*/g, '').trim() : 'Unknown';
+            let headline = '', body = '', cta = '', why = '';
+            lines.forEach(line => {
+                const lower = line.toLowerCase();
+                if (lower.startsWith('headline:')) headline = line.substring(9).trim();
+                else if (lower.startsWith('body:')) body = line.substring(5).trim();
+                else if (lower.startsWith('cta:')) cta = line.substring(4).trim();
+                else if (lower.startsWith('why it works:')) why = line.substring(13).trim();
+            });
+            return { angle, headline, body, cta, why, index: index + 1 };
+        });
+        setCopyVariants(variants);
+    };
+
+    const handleGenerateCopy = useCallback(async () => {
+        if (!isBriefComplete) return;
+        setIsGeneratingCopy(true);
+        setCopyVariants([]);
+        try {
+            const result = await generateCopy(brief, platform);
+            parseAndSetCopyVariants(result);
+            showToast('✅ Copy variants generated!');
+        } catch (e) {
+            console.error(e);
+            showToast('❌ Copy generation failed');
+        } finally {
+            setIsGeneratingCopy(false);
+        }
+    }, [brief, platform, isBriefComplete]);
+
+    const parseAndSetCampaignIdeas = (text) => {
+        const conceptBlocks = text.split(/\*\*Concept \d+:/).filter(b => b.trim());
+        const ideas = conceptBlocks.map((concept, index) => {
+            const lines = concept.trim().split('\\n').filter(l => l.trim());
+            const headline = lines[0]?.replace(/\*\*/g, '').trim() || 'Untitled Concept';
+            const fullDescription = lines.slice(1).join('\\n');
+            const visualMatch = fullDescription.match(/Visual:\s*([^\\n]+)/i);
+            const visualDescription = visualMatch?.[1]?.trim() || headline;
+            return { headline, fullDescription, visualDescription, index: index + 1 };
+        });
+        setCampaignIdeas(ideas);
+    };
+
+    const handleGenerateIdeas = useCallback(async () => {
+        if (!isBriefComplete) return;
+        setIsGeneratingIdeas(true);
+        setCampaignIdeas([]);
+        try {
+            const result = await generateConcepts(brief, analysisResult);
+            parseAndSetCampaignIdeas(result);
+            showToast('✅ Concepts generated!');
+        } catch (e) {
+            console.error(e);
+            showToast('❌ Concept generation failed');
+        } finally {
+            setIsGeneratingIdeas(false);
+        }
+    }, [brief, analysisResult, isBriefComplete]);
+
+    const buildCreativePrompt = (noText = false) => {
+        if (!selectedIdea || !selectedCopy) return "";
+        let qualityString = "high quality, sharp details";
+        if (quality === '4k') qualityString = "ultra-HD 4K, photorealistic";
+
+        let styleDirection = "Match the reference concept style";
+        if (stylePreset !== 'match') styleDirection = \`Use \${stylePreset} design style\`;
+
+        const paletteDirective = palette.length > 0 ? \`\\nBrand Colors: \${palette.join(', ')}\` : '';
+        const ratio = platformRatios[platform];
+
+        if (noText) {
+            return \`Create a professional social media creative background image with absolutely NO text, NO headlines, NO logos, NO copy.
+
+            BRIEF:
+            - Brand: \${brief.brandName}
+            - Product: \${brief.productDetails}
+            \${paletteDirective}
+
+            CONCEPT (Visuals ONLY):
+            \${selectedIdea.visualDescription}
+
+            DESIGN:
+            - Style: \${styleDirection}
+            - Platform: \${platform}
+            - Aspect Ratio: \${ratio}
+            - Quality: \${qualityString}
+
+            CRITICAL: This should be a clean background image with NO text overlays whatsoever. Pure visual design only, optimized for \${platform}.\`;
+        }
+
+        return \`Create a professional social media creative.
+
+        BRIEF:
+        - Brand: \${brief.brandName}
+        - Product: \${brief.productDetails}
+        \${paletteDirective}
+
+        CONCEPT:
+        \${selectedIdea.headline}
+        \${selectedIdea.fullDescription}
+
+        COPY (use exactly, embed legibly):
+        Headline: \${selectedCopy.headline}
+        \${selectedCopy.body ? \`Body: \${selectedCopy.body}\` : ''}
+        \${selectedCopy.cta ? \`CTA: \${selectedCopy.cta}\` : ''}
+
+        DESIGN:
+        - Style: \${styleDirection}
+        - Platform: \${platform}
+        - Aspect Ratio: \${ratio}
+        - Quality: \${qualityString}
+
+        Requirements: Professional layout, legible text, on-brand colors, \${platform}-optimized.\`;
+    };
+
+    const processGenerationJob = useCallback(async (jobId, prompt, label, conceptHeadline, copyVariant) => {
+        setQueue(q => q.map(item => item.id === jobId ? { ...item, status: 'generating' } : item));
+        try {
+            const imageUrl = await generateImage(prompt);
+            const creativeData = {
+                url: imageUrl, platform, concept: conceptHeadline, copy: copyVariant,
+                brand: brief.brandName, jobId, label, prompt
+            };
+            setCreatives(c => new Map(c).set(jobId, creativeData));
+            setQueue(q => q.map(item => item.id === jobId ? { ...item, status: 'done' } : item));
+            showToast(\`✅ Creative generated (\${label})!\`);
+        } catch (e) {
+            console.error(e);
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            setQueue(q => q.map(item => item.id === jobId ? { ...item, status: 'failed', error: errorMessage } : item));
+            showToast(\`❌ Generation failed (\${label})\`);
+        }
+    }, [brief.brandName, platform]);
+
+    const handleStartGeneration = useCallback(async () => {
+        if (!canGenerate || !selectedIdea || !selectedCopy) return;
+        const timestamp = Date.now();
+        const jobIdText = \`\${timestamp}-\${platform}-text\`;
+        const jobIdNoText = \`\${timestamp}-\${platform}-notext\`;
+
+        const newQueueItems = [
+            { id: jobIdText, platform, concept: \`\${selectedIdea.headline} (With Text)\`, status: 'pending' },
+            { id: jobIdNoText, platform, concept: \`\${selectedIdea.headline} (No Text)\`, status: 'pending' },
+        ];
+        setQueue(q => [...q, ...newQueueItems]);
+
+        processGenerationJob(jobIdText, buildCreativePrompt(false), "With Text", selectedIdea.headline, selectedCopy);
+        processGenerationJob(jobIdNoText, buildCreativePrompt(true), "No Text", selectedIdea.headline, null);
+    }, [canGenerate, platform, selectedIdea, selectedCopy, processGenerationJob, buildCreativePrompt]);
+
+    const handleRetry = (jobId) => {
+        const queueItem = queue.find(item => item.id === jobId);
+        if (!queueItem) {
+             showToast(\`❌ Could not find original data for job \${jobId}\`);
+             return;
+        }
+
+        const originalCreativeData = creatives.get(jobId);
+
+        if (!originalCreativeData) {
+            if (!selectedIdea || !selectedCopy) {
+                showToast(\`❌ Cannot retry: Missing selected concept or copy.\`);
+                return;
+            }
+             const isText = queueItem.concept.includes('With Text');
+             const prompt = buildCreativePrompt(!isText);
+             const copy = isText ? selectedCopy : null;
+
+             setQueue(q => q.map(item => item.id === jobId ? {...item, status: 'pending', error: undefined} : item));
+             processGenerationJob(jobId, prompt, isText ? 'With Text' : 'No Text', selectedIdea.headline, copy);
+
+        } else {
+            setQueue(q => q.map(item => item.id === jobId ? {...item, status: 'pending', error: undefined} : item));
+            processGenerationJob(jobId, originalCreativeData.prompt, originalCreativeData.label, originalCreativeData.concept, originalCreativeData.copy);
+        }
+    };
+
+    const handleSubmitRevision = useCallback(async () => {
+        if (!currentRevisionId || !revisionFeedback.trim()) return;
+        const originalCreative = creatives.get(currentRevisionId);
+        if (!originalCreative) return;
+
+        setModals(m => ({...m, revision: false}));
+        setQueue(q => q.map(item => item.id === currentRevisionId ? {...item, status: 'generating', error: undefined} : item));
+
+        try {
+            const revisionPrompt = \`\${originalCreative.prompt}\\n\\nREVISION REQUEST:\\n\${revisionFeedback}\`;
+            const newImageUrl = await generateImage(revisionPrompt);
+            const revisedCreative = { ...originalCreative, url: newImageUrl, prompt: revisionPrompt };
+            setCreatives(c => new Map(c).set(currentRevisionId, revisedCreative));
+            setQueue(q => q.map(item => item.id === currentRevisionId ? { ...item, status: 'done' } : item));
+            showToast('✅ Creative revised!');
+        } catch (e) {
+            console.error(e);
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            setQueue(q => q.map(item => item.id === currentRevisionId ? { ...item, status: 'failed', error: errorMessage } : item));
+            showToast('❌ Revision failed');
+        } finally {
+            setRevisionFeedback('');
+            setCurrentRevisionId(null);
+        }
+    }, [currentRevisionId, revisionFeedback, creatives]);
+
+    const handleDownload = (url, name) => {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = \`\${brief.brandName || 'socialspark'}-\${name}.png\`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    const handleDownloadAll = async () => {
+        if (creatives.size === 0) return showToast("❌ No creatives to download");
+        showToast("📦 Preparing download...");
+        const zip = new JSZip();
+        let count = 0;
+
+        const promises = Array.from(creatives.values()).map(async (data) => {
+            try {
+                const response = await fetch(data.url);
+                const blob = await response.blob();
+                zip.file(\`\${data.brand}-\${data.platform}-\${data.jobId}.png\`, blob);
+                count++;
+            } catch (e) {
+                console.error(\`Failed to fetch \${data.jobId}:\`, e);
+            }
+        });
+
+        await Promise.all(promises);
+
+        if (count === 0) return showToast("❌ No images could be added to the zip");
+
+        const content = await zip.generateAsync({ type: "blob" });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = \`\${brief.brandName || 'socialspark'}-creatives.zip\`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        showToast("✅ Downloaded all creatives!");
+    };
+
+    const handleSaveProfile = () => {
+        if (!brief.brandName) return showToast('❌ Enter a brand name first');
+        const profile = { ...brief, brandPalette: palette, savedAt: new Date().toISOString() };
+        const updatedProfiles = { ...profiles, [brief.brandName]: profile };
+        localStorage.setItem('clientProfiles', JSON.stringify(updatedProfiles));
+        setProfiles(updatedProfiles);
+        showToast(\`✅ Profile saved: \${brief.brandName}\`);
+    };
+
+    const handleLoadProfile = (profile) => {
+        setBrief({
+            brandName: profile.brandName,
+            productDetails: profile.productDetails,
+            campaignGoal: profile.campaignGoal,
+            coreMessage: profile.coreMessage,
+            targetAudience: profile.targetAudience,
+            brandVoice: profile.brandVoice,
+            emotionalAppeal: profile.emotionalAppeal,
+        });
+        setPalette(profile.brandPalette || []);
+        setModals(m => ({ ...m, loadProfile: false }));
+        showToast(\`✅ Loaded: \${profile.brandName}\`);
+    };
+
+    const handleClearAll = () => {
+        setBrief(initialBrief);
+        setConceptFile(null);
+        setAnalysisResult(null);
+        setPalette([]);
+        setCopyVariants([]);
+        setSelectedCopy(null);
+        setCampaignIdeas([]);
+        setSelectedIdea(null);
+        setQueue([]);
+        setCreatives(new Map());
+        setModals(m => ({ ...m, confirmClear: false }));
+        showToast('✅ All data cleared!');
+    };
+
+    return React.createElement('div', { className: "max-w-[1920px] mx-auto p-4 md:p-6" },
+        React.createElement(Toast, { message: toast.message, show: toast.show }),
+
+        React.createElement(Modal, { active: modals.revision },
+            React.createElement('div', { className: "modal-content w-full max-w-lg bg-[#18181b] border border-[#27272a] rounded-xl p-8 animate-slide-in" },
+                React.createElement('h3', { className: "text-2xl font-bold mb-4" }, "Request Revision"),
+                React.createElement('textarea', { value: revisionFeedback, onChange: e => setRevisionFeedback(e.target.value), rows: 5, placeholder: "Describe the changes you need...", className: "w-full mb-4" }),
+                React.createElement('div', { className: "flex gap-3" },
+                    React.createElement('button', { onClick: handleSubmitRevision, className: "flex-1 btn-primary px-4 py-3 rounded-lg font-medium" }, "Submit Revision"),
+                    React.createElement('button', { onClick: () => setModals(m => ({...m, revision: false})), className: "btn-secondary px-4 py-3 rounded-lg font-medium" }, "Cancel")
+                )
+            )
+        ),
+
+        React.createElement(Modal, { active: modals.loadProfile },
+            React.createElement('div', { className: "modal-content w-full max-w-lg bg-[#18181b] border border-[#27272a] rounded-xl p-8 animate-slide-in" },
+                React.createElement('h3', { className: "text-2xl font-bold mb-4" }, "Load Client Profile"),
+                React.createElement('div', { className: "space-y-2 max-h-96 overflow-y-auto mb-4" },
+                    Object.keys(profiles).length === 0 ? React.createElement('p', { className: "text-zinc-500 text-sm" }, "No saved profiles") :
+                    Object.values(profiles).map((p) => (
+                        React.createElement('div', { key: p.brandName, onClick: () => handleLoadProfile(p), className: "p-3 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-green-500 cursor-pointer transition-all" },
+                            React.createElement('div', { className: "font-semibold text-sm" }, p.brandName),
+                            React.createElement('div', { className: "text-xs text-zinc-500" }, "Saved: ", new Date(p.savedAt).toLocaleDateString())
+                        )
+                    ))
+                ),
+                React.createElement('button', { onClick: () => setModals(m => ({...m, loadProfile: false})), className: "btn-secondary w-full px-4 py-3 rounded-lg font-medium" }, "Close")
+            )
+        ),
+
+        React.createElement(Modal, { active: modals.confirmClear },
+             React.createElement('div', { className: "modal-content max-w-md bg-[#18181b] border border-[#27272a] rounded-xl p-8 animate-slide-in" },
+                React.createElement('h3', { className: "text-2xl font-bold mb-2" }, "Clear Everything?"),
+                React.createElement('p', { className: "text-zinc-400 text-sm mb-6" }, "This will reset all inputs and delete generated creatives."),
+                React.createElement('div', { className: "flex gap-3" },
+                    React.createElement('button', { onClick: handleClearAll, className: "flex-1 px-4 py-3 rounded-lg font-medium bg-red-950 text-red-400 border border-red-900 hover:bg-red-900" }, "Yes, Clear All"),
+                    React.createElement('button', { onClick: () => setModals(m => ({...m, confirmClear: false})), className: "flex-1 btn-secondary px-4 py-3 rounded-lg font-medium" }, "Cancel")
+                )
+            )
+        ),
+
+        React.createElement(Header, { onSave: handleSaveProfile, onLoad: () => setModals(m => ({...m, loadProfile: true})), onClear: () => setModals(m => ({...m, confirmClear: true})) }),
+
+         React.createElement('nav', { className: "glass-card p-2 mb-6 animate-slide-in" },
+            React.createElement('div', { className: "flex gap-2" },
+                React.createElement('button', { className: \`tab-btn \${activeTab === 'campaign' ? 'active' : ''}\`, onClick: () => setActiveTab('campaign') },
+                    React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" })),
+                    "Campaign Studio"
+                ),
+                React.createElement('button', { className: \`tab-btn \${activeTab === 'creative-board' ? 'active' : ''}\`, onClick: () => setActiveTab('creative-board') },
+                    React.createElement('svg', { className: "w-5 h-5", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" })),
+                    "Creative Board"
+                )
+            )
+        ),
+
+        React.createElement('div', { className: \`tab-content \${activeTab === 'campaign' ? 'active' : ''}\` },
+            React.createElement('div', { className: "grid grid-cols-1 lg:grid-cols-12 gap-6" },
+                React.createElement('div', { className: "lg:col-span-5 flex flex-col gap-6" },
+                    React.createElement(BriefForm, { brief: brief, setBrief: setBrief, onAutoFill: handleAutoFill, isAutoFilling: isAutoFilling }),
+                    React.createElement(VisualsForm, { onFileChange: setConceptFile, conceptFile: conceptFile, isAnalyzing: isAnalyzing, onAnalyze: handleAnalyze, palette: palette, onAddColor: handleAddColor, onRemoveColor: handleRemoveColor }),
+                    analysisResult !== null && React.createElement('section', { className: "glass-card p-6 animate-slide-in" },
+                        React.createElement('h2', { className: "text-xl font-bold mb-4 flex items-center gap-2" }, React.createElement('span', null, "📊"), " Concept Analysis"),
+                        isAnalyzing ? React.createElement('div', { className: "flex justify-center p-4" }, React.createElement('div', { className: "loader" })) :
+                        React.createElement('div', { className: "text-sm text-zinc-300 leading-relaxed p-4 bg-black/30 rounded-lg", dangerouslySetInnerHTML: { __html: analysisResult.replace(/\*\*(.*?)\*\*/g, '<strong class="text-green-400 block mt-3 mb-1">$1</strong>').replace(/\n/g, '<br />') } })
+                    ),
+                    React.createElement(AIGeneration, {
+                        isBriefComplete: isBriefComplete,
+                        onGenerateCopy: handleGenerateCopy, isGeneratingCopy: isGeneratingCopy, copyVariants: copyVariants, selectedCopy: selectedCopy, onSelectCopy: setSelectedCopy,
+                        onGenerateIdeas: handleGenerateIdeas, isGeneratingIdeas: isGeneratingIdeas, campaignIdeas: campaignIdeas, selectedIdea: selectedIdea, onSelectIdea: setSelectedIdea
+                    }),
+                    React.createElement(PlatformSettings, { selectedPlatform: platform, onPlatformChange: setPlatform, quality: quality, onQualityChange: setQuality, stylePreset: stylePreset, onStyleChange: setStylePreset }),
+                    React.createElement('button', { onClick: handleStartGeneration, disabled: !canGenerate, title: !canGenerate ? \`Missing: \${!isBriefComplete ? 'Brief, ' : ''}\${!conceptFile ? 'Image, ' : ''}\${!selectedCopy ? 'Copy, ' : ''}\${!selectedIdea ? 'Concept' : ''}\`.replace(/,\s*$/, '') : '', className: "btn-primary w-full px-6 py-4 rounded-lg font-bold text-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed sticky bottom-6 z-10" },
+                        React.createElement('svg', { className: "h-6 w-6", fill: "none", viewBox: "0 0 24 24", stroke: "currentColor", strokeWidth: "2" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M13 10V3L4 14h7v7l9-11h-7z" })),
+                        "Generate Creative"
+                    )
+                ),
+                React.createElement('div', { className: "lg:col-span-7 flex flex-col gap-6" },
+                    React.createElement(GenerationQueue, { queue: queue }),
+                    React.createElement(ResultsGrid, {
+                        creatives: creatives,
+                        queue: queue,
+                        onDownload: handleDownload,
+                        onRevise: (jobId) => { setCurrentRevisionId(jobId); setModals(m => ({...m, revision: true})); },
+                        onRetry: handleRetry,
+                        onDownloadAll: handleDownloadAll
+                    })
+                )
+            )
+        ),
+         React.createElement('div', { className: \`tab-content \${activeTab === 'creative-board' ? 'active' : ''}\` },
+            React.createElement(CreativeBoard, { showToast: showToast })
+        )
+    );
+}
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error("Could not find root element to mount to");
+}
+
+const root = ReactDOM.createRoot(rootElement);
+root.render(
+  React.createElement(React.StrictMode, null,
+    React.createElement(App)
+  )
+);
+  </script>
+</body>
+</html>
